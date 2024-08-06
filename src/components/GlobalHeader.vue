@@ -18,7 +18,7 @@
         :selected-keys="selectedKeys"
         @menu-item-click="doMenuClick"
       >
-        <a-menu-item v-for="item in routes" :key="item.path">
+        <a-menu-item v-for="item in routers" :key="item.path">
           {{ item.name }}
         </a-menu-item>
       </a-menu>
@@ -32,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import { routes } from "@/router/routers";
+import { routers } from "@/router/routers";
 import router from "@/router";
 import { ref } from "vue";
 import { useStore } from "vuex";

@@ -1,5 +1,6 @@
 <template>
-  <a-row id="globalHeader" align="center">
+  <!--  :wrap="false": 关闭换行，避免窗口过窄时，用户名区域换行-->
+  <a-row id="globalHeader" align="center" :wrap="false">
     <a-col flex="70px">
       <a-menu-item
         key="0"
@@ -18,7 +19,7 @@
         :selected-keys="selectedKeys"
         @menu-item-click="doMenuClick"
       >
-        <a-menu-item v-for="item in routers" :key="item.path">
+        <a-menu-item v-for="item in visibleRouters" :key="item.path">
           {{ item.name }}
         </a-menu-item>
       </a-menu>
@@ -34,8 +35,39 @@
 <script setup lang="ts">
 import { routers } from "@/router/routers";
 import router from "@/router";
-import { ref } from "vue";
+import { compile, computed, ref } from "vue";
 import { useStore } from "vuex";
+import chickAccess from "@/access/chickAccess";
+import accessEnum from "@/access/accessEnum";
+
+// 获取当前存储的用户信息
+const store = useStore();
+
+// 需要显示的路由
+// const visibleRouters = routers.filter((item, index) => {
+//   if (item.meta?.hideInMenu) {
+//     return false;
+//   }
+//   if (!chickAccess(loginUser, item?.meta?.access as string)) {
+//     console.log(item?.meta?.access);
+//     return false;
+//   }
+//   return true;
+// });
+// 增加computed，变化时刷新visibleRouters的值，对于数据进行二次计算
+const visibleRouters = computed(() => {
+  return routers.filter((item, index) => {
+    if (item.meta?.hideInMenu) {
+      return false;
+    }
+    if (
+      !chickAccess(store.state.user.loginUser, item?.meta?.access as string)
+    ) {
+      return false;
+    }
+    return true;
+  });
+});
 
 // 默认主页
 const selectedKeys = ref(["/"]);
@@ -49,22 +81,18 @@ const doMenuClick = (key: string) => {
   router.push(key);
 };
 
-// 获取当前存储的用户信息
-let store = useStore();
-console.log(store.state.user.loginUser.userName);
-
 setTimeout(() => {
   // dispatch是调用actions的异步的方法
   // 如果不需要异步直接获取mutations的方法使用 store.commit
   store.dispatch("getLoginUser", {
-    userName: "quanquan",
+    userName: "111",
+    userRole: accessEnum.ADMIN,
   });
-}, 1000);
+}, 3000);
 </script>
 
 <style scoped>
 #globalHeader {
-  margin-bottom: 16px;
   box-shadow: #eee 1px 1px 5px;
 }
 

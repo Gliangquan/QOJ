@@ -9,7 +9,7 @@
       >
         <div class="titleBar">
           <img class="logo" src="../assets/logo.png" alt="logo" />
-          <div class="title">QOJ</div>
+          <div class="title">qoj</div>
         </div>
       </a-menu-item>
     </a-col>

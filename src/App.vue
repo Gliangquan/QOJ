@@ -1,6 +1,11 @@
 <template>
   <div id="app">
-    <BasicLayout />
+    <template v-if="route.path.startsWith('/user')">
+      <router-view />
+    </template>
+    <template v-else>
+      <BasicLayout />
+    </template>
   </div>
 </template>
 
@@ -15,20 +20,17 @@
 </style>
 <script setup>
 import BasicLayout from "@/layouts/BasicLayout.vue";
-import { useRouter } from "vue-router";
-import { useStore } from "vuex";
 
-const router = useRouter();
-const store = useStore();
+import { onMounted } from "vue";
+import { useRoute } from "vue-router";
 
-router.beforeEach((to, from, next) => {
-  // 仅管理员可见，判断当前用户是否有权限
-  if (to.meta?.role === "canAdmin") {
-    if (store.state?.user?.loginUser?.role !== "admin") {
-      next("/noAdmin");
-      return;
-    }
-  }
-  next();
+const route = useRoute();
+
+// 全局初始化函数，有全局单次调用的代码都可以写在这里：
+const doInit = () => {
+  console.log("HelloWorld：欢迎来到我的项目");
+};
+onMounted(() => {
+  doInit();
 });
 </script>

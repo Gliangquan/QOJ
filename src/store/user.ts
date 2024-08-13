@@ -1,5 +1,7 @@
 import { StoreOptions } from "vuex";
 import accessEnum from "@/access/accessEnum";
+import { UserControllerService } from "../../generated";
+import AccessEnum from "@/access/accessEnum";
 
 export default {
   mespace: true,
@@ -7,16 +9,27 @@ export default {
   state: () => ({
     loginUser: {
       userName: "未登录",
-      userRole: accessEnum.USER,
+      // userRole: accessEnum.USER,
     },
   }),
 
   // 异步
   actions: {
-    getLoginUser(context, payload) {
-      // 加载接口获取用户数据
-      // context就是 { commit, state }
-      context.commit("updateUser", payload);
+    async getLoginUser(context, payload) {
+      // 远程加载接口获取用户数据
+      const res = await UserControllerService.getLoginUserUsingGet();
+      if (res.code == 0) {
+        // context就是 { commit, state }
+        context.commit("updateUser", {
+          ...context.state.loginUser,
+          userRole: AccessEnum.USER,
+        });
+      } else {
+        context.commit("updateUser", {
+          userName: "未登录",
+          userRole: accessEnum.NOT_LOGIN,
+        });
+      }
     },
   },
 

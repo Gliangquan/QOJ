@@ -7,7 +7,13 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import HelloWorld from "@/components/HelloWorld.vue"; // @ is an alias to /src
+import HelloWorld from "@/components/HelloWorld.vue";
+
+// import axios from "axios"; // @ is an alias to /src
+// // axios示例代码
+// axios.get("/users").then((res) => {
+//   console.log(res.data);
+// });
 
 export default defineComponent({
   name: "HomeView",
